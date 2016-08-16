@@ -10,7 +10,7 @@
 <?
 		$txtbox =$txtbox;
 		$link = mysql_connect("localhost","root","root");
-		$objDB = mysql_select_db("thaisignlanguage");
+		$objDB = mysql_select_db("thaisignlanguage2");
 		mysql_query("SET NAMES TIS620");
 		// คำสั่งที่ใช้อ่ำนข้อมูลสำหรับกำรค้นหำ
 		$strSQL = "SELECT  * from vocabulary where words LIKE '%".$txtbox."%'";
@@ -30,7 +30,7 @@
     	  <tr>
 		<td><div align="center"><?php echo $objResult["id"];?></div></td>
 		<td><div align="center"><?php echo $objResult["words"];?></div></td>
-		<td><?php echo $objResult["note"];?></td>
+		<td><?php echo $objResult["synonyms"];?></td>
 	  </tr>
 	<?php
 	$id =  $objResult["id"];

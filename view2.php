@@ -14,7 +14,7 @@
 		$id[4]; $words[4];$note[4];$videoNum=0;$videoCount=3;;
 		
 		$link = mysql_connect("localhost","root","root");
-		$objDB = mysql_select_db("thaisignlanguage");
+		$objDB = mysql_select_db("thaisignlanguage2");
 		mysql_query("SET NAMES TIS620");
 		// คำสั่งที่ใช้อ่ำนข้อมูลสำหรับกำรค้นหำ
 ?>
@@ -31,7 +31,7 @@
 				{    	  
 						$id[$i]=$objResult["id"];
 						$words[$i]=$objResult["words"];
-						$note[$i]=$objResult["note"];
+						$note[$i]=$objResult["synonyms"];
 				}
 	
 			}

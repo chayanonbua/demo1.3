@@ -27,7 +27,7 @@ and open the template in the editor.
 		$videoNum=0;$videoCount=0; $test ="";
 		
 		$link = mysql_connect("localhost","root","root");
-		$objDB = mysql_select_db("thaisignlanguage");
+		$objDB = mysql_select_db("thaisignlanguage2");
 		mysql_query("SET NAMES TIS620");
 		// คำสั่งที่ใช้อ่ำนข้อมูลสำหรับกำรค้นหำ
 	?>
