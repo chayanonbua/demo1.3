@@ -13,8 +13,19 @@
 		$objDB = mysql_select_db("thaisignlanguage2");
 		mysql_query("SET NAMES TIS620");
 		// คำสั่งที่ใช้อ่ำนข้อมูลสำหรับกำรค้นหำ
-		$strSQL = "SELECT  * from vocabulary where words LIKE '%".$txtbox."%'";
+		$strSQL = "SELECT  * from vocabulary where words = '".$txtbox."'";
 		$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+		// นับจำนวนที่หาได้
+		$result=mysql_query("SELECT  count(*) as total from vocabulary where words = '".$txtbox."'");
+		$data=mysql_fetch_assoc($result);
+		echo $data['total']; // แสดงจำนวนที่หาได้
+		// ถ้าหาจาก words ให้เปลี่ยนไปหาจาก synonyms
+		if($data['total']==0)
+		{
+			$strSQL = "SELECT  * from vocabulary where synonyms LIKE '%".$txtbox."%'";
+			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+		}
+		
 ?>
 		<table width="600" border="1">
 	  <tr>
