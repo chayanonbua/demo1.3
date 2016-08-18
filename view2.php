@@ -12,53 +12,53 @@
 		$text[1]=$_GET['txtbox2'];
 		$text[2]=$_GET['txtbox3'];
 		$id[4]; $words[4];$note[4];$videoNum=0;$videoCount=3;;
-		
-		$link = mysql_connect("localhost","root","root");
+
+		$link = mysql_connect("localhost","root","root1234");
 		$objDB = mysql_select_db("thaisignlanguage2");
-		mysql_query("SET NAMES TIS620");
-		// ¤ÓÊÑè§·ÕèãªéÍèÓ¹¢éÍÁÙÅÊÓËÃÑº¡ÓÃ¤é¹ËÓ
+		//mysql_query("SET NAMES TIS620");
+		// ï¿½ï¿½ï¿½ï¿½è§·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñºï¿½ï¿½Ã¤ï¿½ï¿½ï¿½ï¿½
 ?>
-		<?php ///////////////////////////////////////////////////´Ö§¢éÍÁÙÅ////////////////////////////////////////////////////////////// ?>
-		
+		<?php ///////////////////////////////////////////////////ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½////////////////////////////////////////////////////////////// ?>
+
 			<?php
-			
-			
+
+
 			for($i=0;$i<3;$i++)
 			{
 				$strSQL = "SELECT  * from vocabulary where words LIKE '%".$text[$i]."%'";
-		    	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]"); 
+		    	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
 				while($objResult = mysql_fetch_array($objQuery))
-				{    	  
+				{
 						$id[$i]=$objResult["id"];
 						$words[$i]=$objResult["words"];
 						$note[$i]=$objResult["synonyms"];
 				}
-	
+
 			}
-		
+
 	?>
-	<?php ////////////////////////////////////////////////////////áÊ´§¼Å/////////////////////////////////////////////////////////	?>	
+	<?php ////////////////////////////////////////////////////////ï¿½Ê´ï¿½ï¿½ï¿½/////////////////////////////////////////////////////////	?>
 
 		 <table width="1800" border="1">
 	  <tr>
-		<th width="600"> <div align="center">¤Ó·Õè 1 </div></th>
-		<th width="600"> <div align="center">¤Ó·Õè 2 </div></th>
-		<th width="600"> <div align="center">¤Ó·Õè 3 </div></th>
+		<th width="600"> <div align="center">ï¿½Ó·ï¿½ï¿½ 1 </div></th>
+		<th width="600"> <div align="center">ï¿½Ó·ï¿½ï¿½ 2 </div></th>
+		<th width="600"> <div align="center">ï¿½Ó·ï¿½ï¿½ 3 </div></th>
         <tr>
 		<td><div align="center"><?php echo $text[0];?>  </div></td>
 		<td><div align="center"> <?php echo $text[1];?>   </div></td>
 		<td><div align="center">  <?php echo $text[2];?>  </td>
-	  </tr>	
+	  </tr>
       <tr>
-      <?php //////////////////////////////////////////////////////// VDO1 /////////////////////////////////////////////////////////	?>	
+      <?php //////////////////////////////////////////////////////// VDO1 /////////////////////////////////////////////////////////	?>
 	 <td align="center">
 		<video width="600" controls loop>
  		 <source src="vdo//<?php echo $id[0].".mp4";?>" type="video/mp4">
  		 Your browser does not support HTML5 video.
 		</video>
-		
+
 	</td>
-		<?php //////////////////////////////////////////////////////// VDO2 /////////////////////////////////////////////////////////	?>	
+		<?php //////////////////////////////////////////////////////// VDO2 /////////////////////////////////////////////////////////	?>
 		<td align="center"><video width="600" controls>
  		 <source src="vdo//<?php echo $id[1].".mp4";?>" type="video/mp4">
   		<source src="4.ogg" type="video/ogg">
@@ -66,7 +66,7 @@
 		</video>
         </td>
     	</td>
-        <?php //////////////////////////////////////////////////////// VDO3 /////////////////////////////////////////////////////////	?>	
+        <?php //////////////////////////////////////////////////////// VDO3 /////////////////////////////////////////////////////////	?>
 		<td align="center"><video width="600" controls>
  		 <source src="vdo//<?php echo $id[2].".mp4";?>" type="video/mp4">
   		<source src="4.ogg" type="video/ogg">
@@ -74,34 +74,34 @@
 		</video>
         </td>
         </tr>
-     
+
         <th>
         <td align="center">
-        <video width="600" controls id="myVideo"> 
+        <video width="600" controls id="myVideo">
          <source src="vdo//<?php echo $id[0].".mp4";?>" type="video/mp4">
           </video>
-         <?php echo $_GET['txtbox1'].$_GET['txtbox2'].$_GET['txtbox3']; 
+         <?php echo $_GET['txtbox1'].$_GET['txtbox2'].$_GET['txtbox3'];
 		 			echo " (".$id[0]." ".$id[1]." ".$id[2].")";
 		  ?>
-          
+
           </td>
           </th>
         <script type='text/javascript'>
-				
+
 				 var videoSource = new Array();
 				 videoSource[0]='vdo//<?php echo $id[0].".mp4";?>';
 				videoSource[1]='vdo//<?php echo $id[1].".mp4";?>';
 				videoSource[2]='vdo//<?php echo $id[2].".mp4";?>';
 				var videoCount = videoSource.length;
 				var i=1;
-				
-				
+
+
 				function videoPlay(videoNum)
                 {
 					document.getElementById("myVideo").setAttribute("src",videoSource[videoNum]);
 					document.getElementById("myVideo").load();
 					document.getElementById("myVideo").play();
-					
+
                 }
 				document.getElementById('myVideo').addEventListener('ended',myHandler,false);
 				function myHandler() {
@@ -119,18 +119,18 @@
 							else{
 							videoPlay(i-1);
 							}
-        
+
        			}
 		</script>
-      
-     
-		
-	 
+
+
+
+
 
 	</table>
 
-	
-    
+
+
 	<?php
 	mysql_close($link);
 ?>

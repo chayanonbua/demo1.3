@@ -7,27 +7,27 @@ and open the template in the editor.
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>DEMO 1.1</title>
-        
+        <title>DEMO 1.3</title>
+
         <!-- Jquery -->
         <script type="text/javascript" src="style/js/jquery-1.11.3.js"></script>
         <!-- End Jquery -->
-        
+
         <!-- Bootstrap -->
         <link rel="stylesheet" type="text/css" href="style/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="style/css/bootstrap-theme.css" />
         <script type="text/javascript" src="style/js/bootstrap.js"></script>
         <!-- End Bootstrap -->
-        
+
     </head>
     <body>
         <div class="container" style="background-color:#09F">
             <div class="row"> <!-- row banner -->
                 <div class="col-lg-12 col-md-12">
                     <img src="pic/testBanner.jpg" class="img-responsive" >
-                </div>           
+                </div>
             </div>	<!-- End row banner-->
-            
+
             <div class="row" style="background-color: #FFF; margin: 0px;"> <!-- row menu -->
    			 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
         		<nav style="width:100%; margin-bottom:0px;" class="navbar navbar-default">
@@ -39,9 +39,9 @@ and open the template in the editor.
                             <li><a href="other.php"><i class='fa fa-cubes'></i>เว็บภาษามืออื่น ๆ</a></li>
 						</ul></div>
                      </div>
-                 </nav>    
+                 </nav>
               </div>	<!-- End row menu-->
-            
+
           	<div class="row" > <!-- row content -->
             	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             		<p class="text-center" style="padding-top:10px">คำศัพท์</p>
@@ -55,60 +55,60 @@ and open the template in the editor.
                             <option value="all"> ทั้งหมด</option>
                             <option value="word">คำ</option>
                             <option value="category">หมวดหมู่</option>
-                            <option value="wordCategory">ประเภทของคำ</option>                            
-                        </select>                
+                            <option value="wordCategory">ประเภทของคำ</option>
+                        </select>
                         <input type="text" id="input" style="width:40%">
                         <button type="submit" class="btn btn-default" >ค้นหา</button>
-                     </form>             	            		
+                     </form>
                 </div>
             </div> <!-- End Search bar-->
-            
+
             <div class="row" > <!-- category content -->
             	<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" > <!-- category -->
                 <label>หมวดมู่</label>
-               		<table class="table"> 
+               		<table class="table">
                             <tr> <td> สัตว์ </td>  </tr>
                             <tr> <td> ของใช้ </td> </tr>
                             <tr> <td> ตัวเลข </td> </tr>
                             <tr> <td> ยานพาหนะ </td> </tr>
                             <tr> <td> อาหารและเครื่องดื่ม </td> </tr>
                             <tr> <td> ท่าทาง </td> </tr>
-                            <tr> <td> อารมณ์ </td> </tr>  
-                            <tr> <td> สถานที่ </td> </tr>                         
+                            <tr> <td> อารมณ์ </td> </tr>
+                            <tr> <td> สถานที่ </td> </tr>
 					</table>
                 </div>	<!-- End category -->
-                
+
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" > <!-- word -->
-               	<label>ตัวอักษร</label>	
-                    <table class="table"> 
+               	<label>ตัวอักษร</label>
+                    <table class="table">
                             <tr> <td> ก </td>   <td> ข </td> </tr>
                             <tr> <td> ค </td>   <td> ง </td> </tr>
                             <tr> <td> จ </td>   <td> ฉ </td> </tr>
                             <tr> <td> ช </td>   <td> ซ </td> </tr>
-                            <tr> <td> ฌ </td>   <td> ณ </td> </tr>                                                     
+                            <tr> <td> ฌ </td>   <td> ณ </td> </tr>
 					</table>
                 </div>	<!-- End word -->
-                
+
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" > <!-- wordcategory -->
-               	<label>ประเภทของคำ</label>	
-                    <table class="table"> 
+               	<label>ประเภทของคำ</label>
+                    <table class="table">
                             <tr> <td> คำนาม </td>  </tr>
                             <tr> <td> คำกริยา </td>  </tr>
                             <tr> <td> คำสรรพนาม </td>  </tr>
                             <tr> <td> คำขยาย </td>  </tr>
-                            <tr> <td> คำบอกเวลา </td>  </tr>                                                     
+                            <tr> <td> คำบอกเวลา </td>  </tr>
 					</table>
                 </div>	<!-- End wordcategory -->
             </div> <!-- End category content-->
-            
+
             <div class="row" > <!-- row footer -->
             	<div class="col-lg-12 col-md-12" style="background-color:#09F">
             		<p > </p>
                 </div>
             </div> <!-- End row footer-->
-            
+
         </div>  <!-- End container -->
-        
-         
+
+
     </body>
 </html>
