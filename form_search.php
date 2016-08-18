@@ -7,9 +7,9 @@
 
 <body>
 
-    <form method="post" action="form_edit.php">
-    ค้นหาข้อมูล <p>
-    คำที่ต้องการค้นหา :
+    <form method="get" action="form_edit.php">
+    เธเนเธเธซเธฒ <p>
+    เธเธฃเธญเธเธเธณเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃเธเนเธเธซเธฒ :
     <input type="text" name="txtbox" size="35"><p>
     <input type="submit" 	name="send" value="Submit">
     <input type ="reset" name="cancel" value="Reset"><p><hr /><p>
