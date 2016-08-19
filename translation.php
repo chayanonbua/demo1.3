@@ -63,7 +63,7 @@ and open the template in the editor.
             <div class="row" style="margin-top:50px"> <!-- row content -->
             	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-center" > <!-- input -->
                   		<form name="form1" style="margin-left:10px" class="text-center" method="post"  action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                      <label id="��ͤ���" >ข้อความ  </label>
+                      <label id="label1" >ข้อความ  </label>
                       <input type="text" name="input" style="text-align:center"  value="<?php echo $input ?>">
                       <label id="tranBack" for="tranback" style="margin-top:50px">ภาษาไทย = </label>
                       <?php
@@ -80,8 +80,22 @@ and open the template in the editor.
 								for($i=0;$i<count($senNOP);$i++)
 								{
 									$senNOP[$i] = preg_replace('/\s+/', '', $senNOP[$i]);
-									$strSQL = "SELECT  * from vocabulary where words LIKE '%".$senNOP[$i]."%'";
-									$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+
+                  $strSQL = "SELECT  * from vocabulary where words = '".$senNOP[$i]."'";
+              		$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+              		// �Ѻ�ӹǹ��������
+              		$result=mysql_query("SELECT  count(*) as total from vocabulary where words = '".$senNOP[$i]."'");
+              		$data=mysql_fetch_assoc($result);
+
+              		if($data['total']==0) //ถ้าหาใน word ไม่เจอให้ไปหาใน synonyms
+              		{
+              			$strSQL = "SELECT * from vocabulary where synonyms LIKE '%".$senNOP[$i]."%'";
+              			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+              		}
+
+
+									//$strSQL = "SELECT  * from vocabulary where words LIKE '%".$senNOP[$i]."%'";
+									//$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
 									while($objResult = mysql_fetch_array($objQuery))
 									{
 											$id[$i]=$objResult["id"];
