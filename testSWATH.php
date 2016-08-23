@@ -75,28 +75,35 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 		else if($input=="NEG"){
 			return "NEG";
 		}
+    else if($input=="JCRG" || $input=="JCMP" || $input=="JSRB" ){
+      return "CON";
+    }
 		else{
 			return("x");
 		}
 	}
 
 	function GetTSSentence($ALLSentenceRole,$word){
-		if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
-			return $word[1]." + ".$word[2];
-		}
-		else if ($ALLSentenceRole=="SNEGV"){
-			return $word[1]." +".$word[3]." + ".$word[2];  // S + NEG + V
-		}
-		else if ($ALLSentenceRole=="SVO"){
-			return $word[3]." +"." CL+ ".$word[1]." + ".$word[2];  // O+CL+S+V
-		}
-		else if ($ALLSentenceRole=="SNEGVO"){
-			return $word[4]." +"." CL+ ".$word[1]." + ".$word[3] ." + " . $word[2];  // O+CL+S+V+NEG
-		}
-		else{
-			//return $word[1]." + ".$word[2];
-			return "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
-		}
+    if(strpos($ALLSentenceRole,'CON')){
+        return "HAVE CON";
+    }else {
+      if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
+        return $word[1]." + ".$word[2];
+      }
+      else if ($ALLSentenceRole=="SNEGV"){
+        return $word[1]." +".$word[3]." + ".$word[2];  // S + NEG + V
+      }
+      else if ($ALLSentenceRole=="SVO"){
+        return $word[3]." +"." CL+ ".$word[1]." + ".$word[2];  // O+CL+S+V
+      }
+      else if ($ALLSentenceRole=="SNEGVO"){
+        return $word[4]." +"." CL+ ".$word[1]." + ".$word[3] ." + " . $word[2];  // O+CL+S+V+NEG
+      }
+      else{
+        //return $word[1]." + ".$word[2];
+        return "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+      }
+    }
 	}
 
 ?>
