@@ -10,7 +10,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
      <?php
 	 	$word;	$role; $sentenceRole;$ALLSentenceRole;
-		$countS = 0;$countV = 0;
+		$countS = 0;$countV = 0;$countCON=0;
 	 	if(isset($_POST['submit']))
 	 	$input = $_POST['input'];
 		$ans=swath($input);
@@ -85,7 +85,8 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
 	function GetTSSentence($ALLSentenceRole,$word){
     if(strpos($ALLSentenceRole,'CON')){
-        return "HAVE CON";
+        $subSen = explode("CON", $ALLSentenceRole);
+        return $subSen[0]." + ".$subSen[1];
     }else {
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
         return $word[1]." + ".$word[2];
