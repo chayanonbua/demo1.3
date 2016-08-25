@@ -76,6 +76,8 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 			return "NEG";
 		}
     else if($input=="JCRG" || $input=="JCMP" || $input=="JSRB" ){
+      $GLOBALS['countS']=0;
+      $GLOBALS['countCON']=1;
       return "CON";
     }
 		else{
@@ -84,9 +86,18 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	}
 
 	function GetTSSentence($ALLSentenceRole,$word){
-    if(strpos($ALLSentenceRole,'CON')){
+    if(strpos($ALLSentenceRole,'CON')){ // มีคำเชื่อมประโยค
         $subSen = explode("CON", $ALLSentenceRole);
-        return $subSen[0]." + ".$subSen[1];
+        $posCON = strpos($ALLSentenceRole,"CON",1);
+        if($ALLSentenceRole=="SCONSVO"){
+          return $word[5]." +"." CL+ ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
+        }
+        else if ($ALLSentenceRole=="SVOCONS"){
+          return $word[3]." CL+".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];  // S + NEG + V
+        }
+         else {
+           return $ALLSentenceRole . " ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+         }
     }else {
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
         return $word[1]." + ".$word[2];
@@ -102,7 +113,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       }
       else{
         //return $word[1]." + ".$word[2];
-        return "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+        return $ALLSentenceRole . "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
       }
     }
 	}
