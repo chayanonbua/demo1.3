@@ -90,10 +90,13 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         $subSen = explode("CON", $ALLSentenceRole);
         $posCON = strpos($ALLSentenceRole,"CON",1);
         if($ALLSentenceRole=="SCONSVO"){
-          return $word[5]." +"." CL+ ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
+          return $word[5]." CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
         }
         else if ($ALLSentenceRole=="SVOCONS"){
-          return $word[3]." CL+".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];  // S + NEG + V
+          return $word[3]."+ CL +".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];  // S + NEG + V
+        }
+        else if ($ALLSentenceRole=="SVOCONSVO"){
+          return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + ".$word[7]." + CL + ".$word[5]." + ". $word[6]  ;  // S + NEG + V
         }
          else {
            return $ALLSentenceRole . " ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
