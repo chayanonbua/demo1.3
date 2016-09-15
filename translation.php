@@ -8,7 +8,7 @@ and open the template in the editor.
 <html>
     <head>
 
-        <meta charset="tis-620">
+        <meta charset="utf-8">
         <title>DEMO 1.3</title>
 
         <!-- Jquery -->
@@ -27,7 +27,7 @@ and open the template in the editor.
 		$videoNum=0;$videoCount=0; $test ="";
 
 		$link = mysql_connect("localhost","root","root1234");
-		$objDB = mysql_select_db("thaisignlanguage2");
+		$objDB = mysql_select_db("thaisignlanguage");
 	//	mysql_query("SET NAMES TIS620");
 		// ����觷�������ӹ����������Ѻ��ä����
 	?>

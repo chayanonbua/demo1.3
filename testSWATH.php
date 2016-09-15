@@ -4,7 +4,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 ?>
 <html>
 <head>
-<meta charset="tis-620" />
+<meta charset="UTF-8" />
 </head>
 <body>
 
@@ -116,7 +116,8 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       }
       else{
         //return $word[1]." + ".$word[2];
-        return $ALLSentenceRole . "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+        //return $ALLSentenceRole . "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+        return $ALLSentenceRole . " = " . $word[1]." + ".$word[2]." + ". $word[3]." + ".$word[4];
       }
     }
 	}
