@@ -90,16 +90,41 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         $subSen = explode("CON", $ALLSentenceRole);
         $posCON = strpos($ALLSentenceRole,"CON",1);
         if($ALLSentenceRole=="SCONSVO"){
-          return $word[5]." CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
+          return $word[5]." + CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
+        }
+        else if ($ALLSentenceRole=="SCONSNEGVO"){
+          return $word[6]." + CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[5]." + ".$word[4];
+          // S + CON + S + NEG + V + O , 2 S , 1 O
         }
         else if ($ALLSentenceRole=="SVOCONS"){
-          return $word[3]."+ CL +".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];  // S + NEG + V
+          return $word[3]."+ CL +".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];
+        }
+        else if ($ALLSentenceRole=="SNEGVOCONS"){
+          //S + NEG + V + O + CON + O , 1 S 1 NEG 2 O,
+          return $word[4]."+ CL +".$word[5]." + ".$word[6]." + CL + ".$word[1]." + ".$word[3]." + ".$word[2];
+        }
+        else if ($ALLSentenceRole=="SNEGVOCONNEGVS"){
+          return $word[4]."+ CL +".$word[5]." + ".$word[8]." + CL + ".$word[1]." + ".$word[3]." + ".$word[2];
+          // S + NEG + V + O + CON + NEG + O , 1 S , 2 NEG , 2 O
         }
         else if ($ALLSentenceRole=="SVOCONSVO"){
-          return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + ".$word[7]." + CL + ".$word[5]." + ". $word[6]  ;  // S + NEG + V
+          return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + ".$word[7]." + CL + ".$word[5]." + ". $word[6]  ;
         }
-         else {
-           return $ALLSentenceRole . " ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+        else if ($ALLSentenceRole=="SNEGVOCONSVO"){
+          // S + NEG + V + O + CON + S + V + O , 2 FULLSEN , 1 NEG FIRST
+          return $word[4]." + CL + ".$word[1]." + ".$word[3]." + " .$word[2]." + " .$word[5]." + ".$word[8]." + CL + ".$word[6]." + ". $word[7]  ;
+        }
+        else if ($ALLSentenceRole=="SVOCONSNEGVO"){
+          // S  + V + O + CON + S + V + NEG + O , 2 FULLSEN , 1 NEG SECOND
+          return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + " .$word[8]." + CL + ".$word[5]." + ".$word[7]." + " .$word[6];
+        }
+        else if ($ALLSentenceRole=="SNEGVOCONSNEGVO"){
+          // S + NEG + V + O + CON + S + V + NEG + O , 2 NEG
+          return $word[4]." + CL + ".$word[1]." + ".$word[3]." + " .$word[2]." + " .$word[5]." + " .$word[9]." + CL + " .$word[6]." + " .$word[8]." + " .$word[7];
+        }
+        else {
+           //return $ALLSentenceRole . " ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
+           return $ALLSentenceRole . " = " . $word[1]." + ".$word[2]." + ". $word[3]." + ".$word[4]."+ ".$word[5]."+ ".$word[6]."+ ".$word[7];
          }
     }else {
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
