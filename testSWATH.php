@@ -68,7 +68,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 				 return "O";
 			}
 		}
-		else if($input=="VACT" || $input=="VSTA" || $input=="VATT"){
+		else if($input=="VACT" || $input=="VSTA" /*|| $input=="VATT"*/){
 			$GLOBALS['countV']=$GLOBALS['countV']+1;
 			return "V";
 		}
@@ -79,6 +79,9 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       $GLOBALS['countS']=0;
       $GLOBALS['countCON']=1;
       return "CON";
+    }
+    else if($input=="ADVN" || $input=="VATT"  ){
+      return "ADJ";
     }
 		else{
 			return("x");
