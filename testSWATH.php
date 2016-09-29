@@ -9,17 +9,13 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 <body>
 
      <?php
-	 	$word;	$role; $sentenceRole;$ALLSentenceRole; $subject; $object; $conjunction; $adjective;
+	 	$word;	$role; $sentenceRole;$ALLSentenceRole; $subject;$verb; $object; $conjunction; $adjective;$NEG;
 
-    global $verb;
-
-		$countS = 1;$countV = 1;$countCON=1;
-	 	if(isset($_POST['submit']))
+		$countS = 1;$countV = 1;$countCON=1;$countO=1;$countNEG=1;
+    	 	if(isset($_POST['submit']))
 	 	$input = $_POST['input'];
 		$ans=swath($input);
 		$count = 1;
-
-
 
 		//echo array_search('V',$sentenceRole);
 		function start($input){
@@ -63,14 +59,16 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	}
 
 	function SetSentenceRole($input,$word){
-    global $verb;
+    global $subject;global $verb;global $object;global $conjunction;global $NEG;
 		if($input=="PPRS" || $input=="NCMN" ){
 			if($GLOBALS['countS']==1){
+        $subject[$GLOBALS['countS']]=$word;
 				$GLOBALS['countS']=2;
 				return "S";
 			}
 			else if($GLOBALS['countS']==2){
-				 return "O";
+        $object[$GLOBALS['countO']]=$word;
+        return "O";
 			}
 		}
 		else if($input=="VACT" || $input=="VSTA" /*|| $input=="VATT"*/){
@@ -79,6 +77,8 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 			return "V";
 		}
 		else if($input=="NEG"){
+      $NEG[$GLOBALS['countNEG']] = $word;
+      $GLOBALS['countNEG'] = $GLOBALS['countNEG']+1;
 			return "NEG";
 		}
     else if($input=="JCRG" || $input=="JCMP" || $input=="JSRB" ){
@@ -93,13 +93,23 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 			return("x");
 		}
 	}
+
   function GetSentenceRole($word,$number){
-    global $verb;
+    global $subject;global $verb;global $object;global $conjunction;global $NEG;
       if($word=="S"){
         return $subject[$number];
       }
       else if ($word=="V"){
         return  $verb[$number];
+      }
+      else if ($word=="O"){
+        return  $object[$number]." + CL ";
+      }
+      else if ($word=="CON"){
+        return  $conjunction[$number];
+      }
+      else if ($word=="NEG"){
+        return  $NEG[$number];
       }
   }
 
@@ -146,16 +156,16 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
          }
     }else {
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
-        return $word[1]." + ".$word[2];
+        return GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
       }
       else if ($ALLSentenceRole=="SNEGV"){
-        return $word[1]." +".$word[3]." + ".$word[2];  // S + NEG + V
+        return GetSentenceRole("S",1)." + ".GetSentenceRole("NEG",1)." + ".GetSentenceRole("V",1);  // S + NEG + V
       }
       else if ($ALLSentenceRole=="SVO"){
-        return $word[3]." +"." CL+ ".$word[1]." + ".GetSentenceRole("V",1);  // O+CL+S+V
+        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);  // O+CL+S+V
       }
       else if ($ALLSentenceRole=="SNEGVO"){
-        return $word[4]." +"." CL+ ".$word[1]." + ".$word[3] ." + " . $word[2];  // O+CL+S+V+NEG
+        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);  // O+CL+S+V+NEG
       }
       else{
         //return $word[1]." + ".$word[2];
