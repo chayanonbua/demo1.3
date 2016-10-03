@@ -61,15 +61,22 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	function SetSentenceRole($input,$word){
     global $subject;global $verb;global $object;global $conjunction;global $NEG;
 		if($input=="PPRS" || $input=="NCMN" ){
-			if($GLOBALS['countS']==1){
+			if($GLOBALS['countS']==1 || ($GLOBALS['countS']==2 && $GLOBALS['countV']==2&& $GLOBALS['countO']==2)){
         $subject[$GLOBALS['countS']]=$word;
-				$GLOBALS['countS']=2;
+				$GLOBALS['countS']=$GLOBALS['countS']+1;
 				return "S";
 			}
-			else if($GLOBALS['countS']==2){
+      else if($GLOBALS['countS']>1 && $GLOBALS['countV']>1){
         $object[$GLOBALS['countO']]=$word;
+        $GLOBALS['countO']=$GLOBALS['countO']+1;
         return "O";
 			}
+			else if($GLOBALS['countS']==2 && $GLOBALS['countCON']==2){
+        $subject[$GLOBALS['countS']]=$word;
+        $GLOBALS['countS']=$GLOBALS['countS']+1;
+        return "S";
+			}
+
 		}
 		else if($input=="VACT" || $input=="VSTA" /*|| $input=="VATT"*/){
       $verb[$GLOBALS['countV']] = $word;
@@ -82,8 +89,9 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 			return "NEG";
 		}
     else if($input=="JCRG" || $input=="JCMP" || $input=="JSRB" ){
-      $GLOBALS['countS']=1;
-      $GLOBALS['countCON']=1;
+      $conjunction[$GLOBALS['countCON']] = $word;
+      //$GLOBALS['countS']=1;
+      $GLOBALS['countCON']=$GLOBALS['countCON']+1;
       return "CON";
     }
     else if($input=="ADVN" || $input=="VATT"  ){
@@ -118,37 +126,49 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         $subSen = explode("CON", $ALLSentenceRole);
         $posCON = strpos($ALLSentenceRole,"CON",1);
         if($ALLSentenceRole=="SCONSVO"){
-          return $word[5]." + CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
+          //return $word[5]." + CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[4];
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("S",2)." + ".GetSentenceRole("V",1);
+          // O + CL + S1 + CON + S2 + V
         }
         else if ($ALLSentenceRole=="SCONSNEGVO"){
-          return $word[6]." + CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[5]." + ".$word[4];
-          // S + CON + S + NEG + V + O , 2 S , 1 O
+          //return $word[6]." + CL + ".$word[1]." + ".$word[2]." + ".$word[3]." + ".$word[5]." + ".$word[4];   // S + CON + S + NEG + V + O , 2 S , 1 O
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("S",2)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+          // O + CL + S1 + CON + S2 + V + NEG
         }
-        else if ($ALLSentenceRole=="SVOCONS"){
-          return $word[3]."+ CL +".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];
+        else if ($ALLSentenceRole=="SVOCONO"){
+          //return $word[3]."+ CL +".$word[4]." + ".$word[5]." CL+ ".$word[1]." + ".$word[2];
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
+          // O1 + CL + CON + O2 + CL + S + V
         }
-        else if ($ALLSentenceRole=="SNEGVOCONS"){
-          //S + NEG + V + O + CON + O , 1 S 1 NEG 2 O,
-          return $word[4]."+ CL +".$word[5]." + ".$word[6]." + CL + ".$word[1]." + ".$word[3]." + ".$word[2];
+        else if ($ALLSentenceRole=="SNEGVOCONO"){
+          //return $word[4]."+ CL +".$word[5]." + ".$word[6]." + CL + ".$word[1]." + ".$word[3]." + ".$word[2];
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+          // O1 + CL + CON + O2 + CL + S + V + NEG
         }
-        else if ($ALLSentenceRole=="SNEGVOCONNEGVS"){
-          return $word[4]."+ CL +".$word[5]." + ".$word[8]." + CL + ".$word[1]." + ".$word[3]." + ".$word[2];
-          // S + NEG + V + O + CON + NEG + O , 1 S , 2 NEG , 2 O
+        else if ($ALLSentenceRole=="SNEGVOCONNEGVO"){
+          //return $word[4]."+ CL +".$word[5]." + ".$word[8]." + CL + ".$word[1]." + ".$word[3]." + ".$word[2];
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+          // O1 + CL + CON + O2 + CL + S + V + NEG
         }
         else if ($ALLSentenceRole=="SVOCONSVO"){
-          return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + ".$word[7]." + CL + ".$word[5]." + ". $word[6]  ;
+          //return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + ".$word[7]." + CL + ".$word[5]." + ". $word[6]  ;
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",2)." + ".GetSentenceRole("V",2);
+          // O1 + CL + S1 + V1 + CON + O2 + CL + S2 + V2
         }
         else if ($ALLSentenceRole=="SNEGVOCONSVO"){
-          // S + NEG + V + O + CON + S + V + O , 2 FULLSEN , 1 NEG FIRST
-          return $word[4]." + CL + ".$word[1]." + ".$word[3]." + " .$word[2]." + " .$word[5]." + ".$word[8]." + CL + ".$word[6]." + ". $word[7]  ;
+          //return $word[4]." + CL + ".$word[1]." + ".$word[3]." + " .$word[2]." + " .$word[5]." + ".$word[8]." + CL + ".$word[6]." + ". $word[7]  ; // S + NEG + V + O + CON + S + V + O , 2 FULLSEN , 1 NEG FIRST
+          return  GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",2)." + ".GetSentenceRole("V",2);
+          // O1 + CL + S1 + V1 + NEG1 + CON + O2 + CL + S2 + V2
         }
         else if ($ALLSentenceRole=="SVOCONSNEGVO"){
-          // S  + V + O + CON + S + V + NEG + O , 2 FULLSEN , 1 NEG SECOND
-          return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + " .$word[8]." + CL + ".$word[5]." + ".$word[7]." + " .$word[6];
+          //return $word[3]." + CL + ".$word[1]." + ".$word[2]." + " .$word[4]." + " .$word[8]." + CL + ".$word[5]." + ".$word[7]." + " .$word[6]; // S  + V + O + CON + S + V + NEG + O , 2 FULLSEN , 1 NEG SECOND
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",2)." + ".GetSentenceRole("V",2)." + ".GetSentenceRole("NEG",1);
+          // O1 + CL + S1 + V1 + CON + O2 + CL + S2 + V2 + NEG
         }
         else if ($ALLSentenceRole=="SNEGVOCONSNEGVO"){
-          // S + NEG + V + O + CON + S + V + NEG + O , 2 NEG
-          return $word[4]." + CL + ".$word[1]." + ".$word[3]." + " .$word[2]." + " .$word[5]." + " .$word[9]." + CL + " .$word[6]." + " .$word[8]." + " .$word[7];
+          //return $word[4]." + CL + ".$word[1]." + ".$word[3]." + " .$word[2]." + " .$word[5]." + " .$word[9]." + CL + " .$word[6]." + " .$word[8]." + " .$word[7]; // S + NEG + V + O + CON + S + V + NEG + O , 2 NEG
+          return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1)." + ".GetSentenceRole("CON",1)." + ".GetSentenceRole("O",2)." + ".GetSentenceRole("S",2)." + ".GetSentenceRole("V",2)." + ".GetSentenceRole("NEG",2);
+          // O1 + S1 + V1 + NEG1 + CON + O2 + S2 + V2 + NEG2
         }
         else {
            //return $ALLSentenceRole . " ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
@@ -159,13 +179,16 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         return GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
       }
       else if ($ALLSentenceRole=="SNEGV"){
-        return GetSentenceRole("S",1)." + ".GetSentenceRole("NEG",1)." + ".GetSentenceRole("V",1);  // S + NEG + V
+        return GetSentenceRole("S",1)." + ".GetSentenceRole("NEG",1)." + ".GetSentenceRole("V",1);
+        // S + NEG + V
       }
       else if ($ALLSentenceRole=="SVO"){
-        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);  // O+CL+S+V
+        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
+        // O+CL+S+V
       }
       else if ($ALLSentenceRole=="SNEGVO"){
-        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);  // O+CL+S+V+NEG
+        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+         // O+CL+S+V+NEG
       }
       else{
         //return $word[1]." + ".$word[2];
