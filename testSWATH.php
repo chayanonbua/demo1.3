@@ -27,7 +27,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 						$swathWord = preg_split("/[@]/", $value, 0, PREG_SPLIT_NO_EMPTY);
 						$word[$count] = $swathWord[0];
 						$role[$count] = $swathWord[1];
-						$sentenceRole[$count] = SetSentenceRole($role[$count],$word[$count]);
+						$sentenceRole[$count] = SetSentenceRole($role[$count],$word[$count],$word[$count-1],$sentenceRole[$count-1]);
 						//echo "�ӷ�� ".$count ." ". $word[$count]. " ˹�ҷ�� ".$role[$count]. " ˹�ҷ��㹻���¤ ".$sentenceRole[$count]."<br>";
 						$ALLSentenceRole = $ALLSentenceRole . $sentenceRole[$count];
 						$count=$count+1;
@@ -58,7 +58,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 		return preg_split("/[|]/", $raw, -1, PREG_SPLIT_NO_EMPTY);
 	}
 
-	function SetSentenceRole($input,$word){
+	function SetSentenceRole($input,$word,$wordBefore,$roleBefore){
     global $subject;global $verb;global $object;global $conjunction;global $NEG;
 		if($input=="PPRS" || $input=="NCMN" ){
 			if($GLOBALS['countS']==1 || ($GLOBALS['countS']==2 && $GLOBALS['countV']==2&& $GLOBALS['countO']==2)){
@@ -95,7 +95,11 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       return "CON";
     }
     else if($input=="ADVN" || $input=="VATT"  ){
-      return "ADJ";
+      //return "ADJ";
+      //return $roleBefore;
+      if($roleBefore=="S"){
+          $subject[$GLOBALS['countS']-1] = $subject[$GLOBALS['countS']-1].".".$word;
+      }
     }
 		else{
 			return("x");
