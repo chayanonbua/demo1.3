@@ -99,6 +99,11 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       //return $roleBefore;
       if($roleBefore=="S"){
           $subject[$GLOBALS['countS']-1] = $subject[$GLOBALS['countS']-1].".".$word;
+      }else if($roleBefore=="V"){
+          $verb[$GLOBALS['countV']-1] = $verb[$GLOBALS['countV']-1].".".$word;
+      }
+      else if($roleBefore=="O"){
+          $object[$GLOBALS['countO']-1] = $object[$GLOBALS['countO']-1].".".$word;
       }
     }
 		else{
