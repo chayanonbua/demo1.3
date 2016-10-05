@@ -9,7 +9,7 @@ and open the template in the editor.
     <head>
 
         <meta charset="utf-8">
-        <title>DEMO 1.3</title>
+        <title>DEMO 1.3 translation2</title>
 
         <!-- Jquery -->
         <script type="text/javascript" src="style/js/jquery-1.11.3.js"></script>
@@ -68,7 +68,7 @@ and open the template in the editor.
                       <label id="tranBack" for="tranback" style="margin-top:50px">ภาษาไทย = </label>
                       <?php
 					  		$id[20];$wordCount=0;
-							include 'testSWATH.php';
+							include 'testSWATH3.php';
 							if(isset($_POST['submit']))
 							 $input = $_POST['input'];
 							 if($input!=""){
