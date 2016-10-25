@@ -11,7 +11,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
      <?php
 	 	$word;	$role; $sentenceRole;$ALLSentence;$ALLSentenceRole=""; $subject;$verb; $object;$inObject; $conjunction; $adjective;$NEG;$pre;
 
-		$countS = 1;$countV = 1;$countCON=1;$countO=1;$countNEG=1;$countP=1;$countINO=1;
+		$countSen=1;$countS = 1;$countV = 1;$countCON=1;$countO=1;$countNEG=1;$countP=1;$countINO=1;
     	 	if(isset($_POST['submit']))
 	 	$input = $_POST['input'];
 		$ans=swath($input);
@@ -22,6 +22,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
 					$ans=swath($input);
 					$count = 1;
+          $TSSentece="";
 
 					foreach($ans as $value){
 						$swathWord = preg_split("/[@]/", $value, 0, PREG_SPLIT_NO_EMPTY);
@@ -35,11 +36,25 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 					}
 
           if($GLOBALS['countCON']>1){
-               checkCON($GLOBALS['$ALLSentenceRole'],$word);
-               return GetTSSentence($GLOBALS['$ALLSentenceRole'],$word);
+
+               if($GLOBALS['countSen']>1){
+                 $GLOBALS['$ALLSentenceRole'] = checkCON($GLOBALS['$ALLSentenceRole'],$word);
+                 $subSentenceRole = explode("C",($GLOBALS['$ALLSentenceRole']));
+                 for($i=1;$i<=$GLOBALS['countSen'];$i++){
+
+                        $TSSentence = $TSSentence." + ".GetTSSentence($subSentenceRole[$i-1],$word,$i);
+                        //$TSSentence=$subSentenceRole[0];
+                 }
+               }
+               else{
+                 $GLOBALS['$ALLSentenceRole'] = checkCON($GLOBALS['$ALLSentenceRole'],$word);
+                 $TSSentence = GetTSSentence($GLOBALS['$ALLSentenceRole'],$word,$GLOBALS['countSen']);
+               }
+
+               return $TSSentence;
           }
           else{
-              return GetTSSentence($GLOBALS['$ALLSentenceRole'],$word);
+              return GetTSSentence($GLOBALS['$ALLSentenceRole'],$word,$GLOBALS['countSen']);
           }
 
 
@@ -76,12 +91,12 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         $GLOBALS['countINO']=$GLOBALS['countINO']+1;
         return "INO";
 			}
-      else if($GLOBALS['countS']>1 && $GLOBALS['countV']>1){
+      else if($GLOBALS['countS']>1 && $GLOBALS['countV']>1 ){
         $object[$GLOBALS['countO']]=$word." + CL(O)";
         $GLOBALS['countO']=$GLOBALS['countO']+1;
         return "O";
 			}
-      else if($GLOBALS['countS']==1 || ($GLOBALS['countS']==2 && $GLOBALS['countV']==2&& $GLOBALS['countO']==2)){
+      else if($GLOBALS['countS']==1 || ($GLOBALS['countS']==2 && $GLOBALS['countV']==2&& $GLOBALS['countO']==2)  ){
         $subject[$GLOBALS['countS']]=$word;
 				$GLOBALS['countS']=$GLOBALS['countS']+1;
 				return "S";
@@ -98,7 +113,24 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 		else if($input=="VACT" || $input=="VSTA" /*|| $input=="VATT"*/){
       $verb[$GLOBALS['countV']] = $word;
       $GLOBALS['countV']=$GLOBALS['countV']+1;
-			return "V";
+
+        if($roleBefore=="O"){
+          $GLOBALS['$ALLSentenceRole'] = substr($GLOBALS['$ALLSentenceRole'],0,-1);
+
+          $subject[$GLOBALS['countS']]=substr($object[$GLOBALS['countO']-1],0,strpos($object[$GLOBALS['countO']-1]," "));
+          $GLOBALS['countS']=$GLOBALS['countS']+1;
+
+          $object[$GLOBALS['countO']-1] = "";
+          $GLOBALS['countO'] = $GLOBALS['countO']-1;
+
+          $GLOBALS['countSen'] = $GLOBALS['countSen']+1;
+
+          return "SV";
+        }
+        else {
+          return "V";
+        }
+
 		}
 		else if($input=="NEG"){
       $NEG[$GLOBALS['countNEG']] = $word;
@@ -109,7 +141,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       $conjunction[$GLOBALS['countCON']] = $word;
       //$GLOBALS['countS']=1;
       $GLOBALS['countCON']=$GLOBALS['countCON']+1;
-      return "CON";
+      return "C";
     }
     else if($input=="ADVN" || $input=="VATT"  ){
       //return "ADJ";
@@ -145,7 +177,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       else if ($word=="O"){
         return  $object[$number];
       }
-      else if ($word=="CON"){
+      else if ($word=="C"){
         return  $conjunction[$number];
       }
       else if ($word=="NEG"){
@@ -161,61 +193,75 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
   function checkCON($SentenceRole,$word){
     global $subject;global $object;
-        if(strpos($SentenceRole,'CON')){
-            $subRoleSen = explode("CON", $SentenceRole);
-            $posCON = strpos($SentenceRole,"CON",1)+1; //
+        if(strpos($SentenceRole,'C')){
+            $subRoleSen = explode("C", $SentenceRole);
+            //$posCON = strpos($SentenceRole,"C",1)+1; //
             //$subSen = explode($word[$posCON], $word);
-            if($posCON>1){
+                    if($GLOBALS['countCON']>=2){
+                        for($i=0;$i<$GLOBALS['countCON'];$i++){
+                                    if ( (strpos($SentenceRole,"SCS")) !== false ){
+                                      //$subject[$GLOBALS['countS']-2]=$word[$posCON-1].$word[$posCON].$word[$posCON+1];
+                                      $posCON = strpos($SentenceRole,"SCS",1)+2;
+                                      $subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
+                                      //$GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
+                                      $SentenceRole = str_replace("SCS","S",$SentenceRole);
+                                    }
+                                    else if ( ((strpos($SentenceRole,"OCO")) !== false)  ) {
 
-                if ( (strpos($SentenceRole,"SCONS")) !== false ){
-                  //$subject[$GLOBALS['countS']-2]=$word[$posCON-1].$word[$posCON].$word[$posCON+1];
-                  $subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
-                  $GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
-                }
-                else if ((strpos($SentenceRole,"OCONO")) !== false) {
-
-                    $object[$GLOBALS['countO']-2]=$object[$GLOBALS['countO']-2]." + ".$word[$posCON]." + ".$object[$GLOBALS['countO']-1];
-                    $GLOBALS['$ALLSentenceRole'] = str_replace("OCONO","O",$SentenceRole);
-                }
-            }
-          }
+                                        $posCON = strpos($SentenceRole,"OCO",1)+2;
+                                        $object[$GLOBALS['countO']-2]=$object[$GLOBALS['countO']-2]." + ".$word[$posCON]." + ".$object[$GLOBALS['countO']-1];
+                                        //$GLOBALS['$ALLSentenceRole'] = str_replace("OCONO","O",$SentenceRole);
+                                        $SentenceRole = str_replace("OCO","O",$SentenceRole);
+                                    }
+                                    else {
+                                      return $SentenceRole;
+                                    }
+                        }
+                    }
+                    else{
+                      return $SentenceRole;
+                    }
+        }
+        else {
+          return $SentenceRole;
+        }
    }
 
-	function GetTSSentence($ALLSentenceRole,$word){
+	function GetTSSentence($ALLSentenceRole,$word,$sentenNum){
 
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
-        return GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
+        return GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
       else if($ALLSentenceRole=="SVPREINO" || $ALLSentenceRole=="SVVPREINO"){
-        return GetSentenceRole("INO",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
+        return GetSentenceRole("INO",1)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
       else if($ALLSentenceRole=="SNEGVPREINO" || $ALLSentenceRole=="SNEGVVPREINO"){
-        return GetSentenceRole("INO",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
       }
       else if ($ALLSentenceRole=="SNEGV"){
-        return GetSentenceRole("S",1)." + ".GetSentenceRole("NEG",1)." + ".GetSentenceRole("V",1);
+        return GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // S + NEG + V
       }
       else if ($ALLSentenceRole=="SVO"){
-        return GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
+        return GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // O+CL+S+V
       }
       else if ($ALLSentenceRole=="SVOPREINO"){
-        return GetSentenceRole("INO",1)." + ".GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1);
+        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // inO + CL(inO) + O + PRE + CL(O) + S + V
       }
       else if ($ALLSentenceRole=="SNEGVO"){
-        return GetSentenceRole("O",1)." + ".GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+        return GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
          // O+CL+S+V+NEG
       }
       else if ($ALLSentenceRole=="SNEGVOPREINO"){
-        return GetSentenceRole("INO",1)." + ".GetSentenceRole("O",1)." + ".GetSentenceRole("S",1)." + ".GetSentenceRole("V",1)." + ".GetSentenceRole("NEG",1);
+        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
         // inO + CL(inO) + O + PRE + CL(O) + S + V + NEG
       }
       else{
         //return $word[1]." + ".$word[2];
         //return $ALLSentenceRole . "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
-        return $GLOBALS['$ALLSentenceRole'] . " = " . print_r($word);
+        return $GLOBALS['$ALLSentenceRole'] . " = " . print_r($word) .GetSentenceRole("S",2) ;
       }
 	}
 
