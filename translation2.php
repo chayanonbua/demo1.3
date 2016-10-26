@@ -20,8 +20,16 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="style/css/bootstrap-theme.css" />
         <script type="text/javascript" src="style/js/bootstrap.js"></script>
         <!-- End Bootstrap -->
-
+        <style>
+          textarea {
+              white-space: normal;
+              text-align: justify;
+              -moz-text-align-last: center; /* Firefox 12+ */
+              text-align-last: center;
+          }
+        </style>
     </head>
+
     <body>
     <?
 		$videoNum=0;$videoCount=0; $test ="";
@@ -64,8 +72,9 @@ and open the template in the editor.
             	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-center" > <!-- input -->
                   		<form name="form1" style="margin-left:10px" class="text-center" method="post"  action="<?php echo $_SERVER['PHP_SELF']; ?>">
                       <label id="label1" >ข้อความ  </label>
-                      <input type="text" name="input" style="text-align:center"  value="<?php echo $input ?>">
-                      <label id="tranBack" for="tranback" style="margin-top:50px">ภาษาไทย = </label>
+                      <!--<input type="text" name="input" style="text-align:center"  value="</*?php echo $input ?>">-->
+                      <textarea name="input" rows="5" cols="30" ><?php echo trim(stripslashes(htmlentities($_POST['input']))); ?></textarea>
+
                       <?php
 					  		$id[20];$wordCount=0;
 							include 'testSWATH3.php';
@@ -73,7 +82,7 @@ and open the template in the editor.
 							 $input = $_POST['input'];
 							 if($input!=""){
 								$sen = start($input);
-								echo $sen;
+
 
 								 $senNOP = preg_split("/[+]/", $sen, 0, PREG_SPLIT_NO_EMPTY); // �¡����੾�Ф������������ͧ���� +
 
@@ -118,7 +127,7 @@ and open the template in the editor.
             	  <video width="600" controls id="myVideo">
                  <source src="vdo//<?php echo $id[0].".mp4";?>" type="video/mp4">
                   </video>
-
+                    <label id="tranBack" for="tranback" style="margin-top:50px">ภาษาไทย = </label> <?echo $sen; ?>
             <script type='text/javascript'>
 
 				 var videoSource = <? echo json_encode($id); ?>;
