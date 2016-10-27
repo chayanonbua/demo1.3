@@ -71,9 +71,9 @@ and open the template in the editor.
             <div class="row" style="margin-top:50px"> <!-- row content -->
             	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-center" > <!-- input -->
                   		<form name="form1" style="margin-left:10px" class="text-center" method="post"  action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                      <label id="label1" >ข้อความ  </label>
+                      <label id="label1" >ภาษาไทย :  </label>
                       <!--<input type="text" name="input" style="text-align:center"  value="</*?php echo $input ?>">-->
-                      <textarea name="input" rows="5" cols="30" ><?php echo trim(stripslashes(htmlentities($_POST['input']))); ?></textarea>
+                      <textarea name="input" rows="3" cols="30" ><?php echo trim(stripslashes(htmlentities($_POST['input']))); ?></textarea>
 
                       <?php
 					  		$id[20];$wordCount=0;
@@ -127,7 +127,7 @@ and open the template in the editor.
             	  <video width="600" controls id="myVideo">
                  <source src="vdo//<?php echo $id[0].".mp4";?>" type="video/mp4">
                   </video>
-                    <label id="tranBack" for="tranback" style="margin-top:50px">ภาษาไทย = </label> <?echo $sen; ?>
+                    <label id="tranBack" for="tranback" style="margin-top:50px">ภาษามือไทย : </label> <?echo $sen; ?>
             <script type='text/javascript'>
 
 				 var videoSource = <? echo json_encode($id); ?>;
