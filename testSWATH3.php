@@ -9,9 +9,9 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 <body>
 
      <?php
-	 	$word;	$role; $sentenceRole;$ALLSentence;$ALLSentenceRole=""; $subject;$verb; $object;$inObject; $conjunction; $adjective;$NEG;$pre;
+	 	$word;	$role; $sentenceRole;$ALLSentence;$ALLSentenceRole=""; $subject;$verb; $object;$inObject; $conjunction; $adjective;$NEG;$pre;$clssifier;$number;
 
-		$countSen=1;$countS = 1;$countV = 1;$countCON=1;$countO=1;$countNEG=1;$countP=1;$countINO=1;
+		$countSen=1;$countS = 1;$countV = 1;$countCON=1;$countO=1;$countNEG=1;$countP=1;$countINO=1;$countCL=1;$countNUM=1;
     	 	if(isset($_POST['submit']))
 	 	$input = $_POST['input'];
 		$ans=swath($input);
@@ -84,7 +84,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	}
 
 	function SetSentenceRole($input,$word,$wordBefore,$roleBefore){
-    global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;
+    global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;global $clssifier;global $number;
 		if($input=="PPRS" || $input=="NCMN" ){
       if($GLOBALS['countP']==2){
         $inObject[$GLOBALS['countINO']]=$word." + CL(inO)";
@@ -161,33 +161,49 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           $GLOBALS['countP']=$GLOBALS['countP']+1;
           return "PRE";
     }
+    else if($input=="DCNM"){
+      $number[$GLOBALS['countNUM']] = $word;
+      $GLOBALS['countNUM'] = $GLOBALS['countNUM']+1;
+			return "D";
+		}
+    else if($input=="CNIT" || $input=="CLTV" || $input=="CMTR" || $input=="CFQC" || $input=="CVBL"){
+      $clssifier[$GLOBALS['countCL']] = $word;
+      $GLOBALS['countCL'] = $GLOBALS['countCL']+1;
+			return "L";
+		}
 		else{
 			return("x =".$input);
 		}
 	}
 
-  function GetSentenceRole($word,$number){
-    global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;
+  function GetSentenceRole($word,$count){
+    global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;global $clssifier;global $number;
       if($word=="S"){
-        return $subject[$number];
+        return $subject[$count];
       }
       else if ($word=="V"){
-        return  $verb[$number];
+        return  $verb[$count];
       }
       else if ($word=="O"){
-        return  $object[$number];
+        return  $object[$count];
       }
       else if ($word=="C"){
-        return  $conjunction[$number];
+        return  $conjunction[$count];
       }
       else if ($word=="NEG"){
-        return  $NEG[$number];
+        return  $NEG[$count];
       }
       else if ($word=="PRE"){
-        return  $pre[$number];
+        return  $pre[$count];
       }
       else if ($word=="INO"){
-        return  $inObject[$number];
+        return  $inObject[$count];
+      }
+      else if ($word=="D"){
+        return  $number[$count];
+      }
+      else if ($word=="L"){
+        return  $clssifier[$count];
       }
   }
 
@@ -209,8 +225,19 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                     else if ( ((strpos($SentenceRole,"OCO")) !== false)  ) {
 
                                         $posCON = strpos($SentenceRole,"OCO",1)+2;
-                                        $object[$GLOBALS['countO']-2]=$object[$GLOBALS['countO']-2]." + ".$word[$posCON]." + ".$object[$GLOBALS['countO']-1];
-                                        //$GLOBALS['$ALLSentenceRole'] = str_replace("OCONO","O",$SentenceRole);
+                                        $posO1 = strpos($SentenceRole,"OCO",1)+1;
+                                        $posO2 = strpos($SentenceRole,"OCO",1)+3;
+                                        $posArrO1 = array_search($word[$posO1]." + CL(O)",$object);
+                                        $posArrO2 = array_search($word[$posO2]." + CL(O)",$object);
+
+
+                                        $object[$posArrO1]=$word[$posO1]." + CL(O) + ".$word[$posCON]." + ".$word[$posO2]." + CL(O)";
+
+
+                                        unset($object[$posArrO2]);
+                                        $object=array_values($object);
+                                        print_r($object);
+
                                         $SentenceRole = str_replace("OCO","O",$SentenceRole);
                                     }
                                     else {
@@ -226,6 +253,15 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           return $SentenceRole;
         }
    }
+
+  function checkNUM($SentenceRole,$word){
+    global $object;global $number;global $clssifier;
+    for($i=0;$i<$GLOBALS['countCON'];$i++){
+      if ( (strpos($SentenceRole,"ODL")) !== false ){
+          $posCON = strpos($SentenceRole,"ODL",1)+1;
+      }
+    }
+  }
 
 	function GetTSSentence($ALLSentenceRole,$word,$sentenNum){
 
