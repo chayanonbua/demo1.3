@@ -20,8 +20,10 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 		//echo array_search('V',$sentenceRole);
 		function start($input){
 
+          global $word;
+          $object;
 					$ans=swath($input);
-					$count = 1;
+					$count = 0;
           $TSSentece="";
 
 					foreach($ans as $value){
@@ -34,6 +36,14 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
             $GLOBALS['$ALLSentenceRole'] = $GLOBALS['$ALLSentenceRole'] . $sentenceRole[$count];
 						$count=$count+1;
 					}
+
+          if($GLOBALS['countCL']>0){
+                for($i=1;$i<=$GLOBALS['countCL'];$i++){
+
+                    $GLOBALS['$ALLSentenceRole'] = checkNUM($GLOBALS['$ALLSentenceRole'],$word);
+
+                }
+          }
 
           if($GLOBALS['countCON']>0){
 
@@ -208,7 +218,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
   }
 
   function checkCON($SentenceRole,$word){
-    global $subject;global $object;
+    global $subject;global $object;global $clssifier;
         if(strpos($SentenceRole,'C')){
             $subRoleSen = explode("C", $SentenceRole);
             //$posCON = strpos($SentenceRole,"C",1)+1; //
@@ -217,9 +227,9 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                         for($i=0;$i<$GLOBALS['countCON'];$i++){
                                     if ( (strpos($SentenceRole,"SCS")) !== false ){
                                       //$subject[$GLOBALS['countS']-2]=$word[$posCON-1].$word[$posCON].$word[$posCON+1];
-                                      $posCON = strpos($SentenceRole,"SCS",1)+2;
-                                      $posS1 = strpos($SentenceRole,"SCS",1)+1;
-                                      $posS2 = strpos($SentenceRole,"SCS",1)+3;
+                                      $posCON = strpos($SentenceRole,"SCS",1)+1;
+                                      $posS1 = strpos($SentenceRole,"SCS",1);
+                                      $posS2 = strpos($SentenceRole,"SCS",1)+2;
                                       $posArrS1 = array_search($word[$posS1],$subject);
                                       $posArrS2 = array_search($word[$posS2],$subject);
 
@@ -228,21 +238,48 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                       unset($subject[$posArrS2]);
                                       $subject=array_values($subject);
 
-                                      print_r($subject);
+
                                       //$subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
                                       //$GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
                                       $SentenceRole = str_replace("SCS","S",$SentenceRole);
                                     }
                                     else if ( ((strpos($SentenceRole,"OCO")) !== false)  ) {
 
-                                        $posCON = strpos($SentenceRole,"OCO",1)+2;
-                                        $posO1 = strpos($SentenceRole,"OCO",1)+1;
-                                        $posO2 = strpos($SentenceRole,"OCO",1)+3;
-                                        $posArrO1 = array_search($word[$posO1]." + CL(O)",$object);
-                                        $posArrO2 = array_search($word[$posO2]." + CL(O)",$object);
+                                        $posCON = strpos($SentenceRole,"OCO",1)+1;
+                                        $posO1 = strpos($SentenceRole,"OCO",1);
+                                        $posO2 = strpos($SentenceRole,"OCO",1)+2;
+
+                                        $tempO1 = preg_quote($word[$posO1], '~');
+                                        $tempO2 = preg_quote($word[$posO2], '~');
+
+                                        $posArrO1 = key(preg_grep('~' . $tempO1 . '~', $object));
+                                        $posArrO2 = key(preg_grep('~' . $tempO2 . '~', $object));
+
+                                        //$posArrO1 = array_search($word[$posO1]." + CL(O)",$object);
+                                        //$posArrO2 = array_search($word[$posO2]." + CL(O)",$object);
+
+                                        if($GLOBALS['countCL']>0){
+                                            for($i=0;$i<$GLOBALS['countCL'];$i++){
+                                                $tempCL = preg_quote($clssifier[$i], '~');
+                                                if( ((strpos($object[$posArrO1],$clssifier[$i])) !== false) ){
+                                                    $object[$posArrO1]=$word[$posO1]." + ".$word[$posCON]." + ";
+                                                }
+                                                else{
+                                                    $object[$posArrO1]=$word[$posO1]." + CL(O) + ".$word[$posCON]." + ";
+                                                }
+                                                if( ((strpos($object[$posArrO2],$clssifier[$i])) !== false) ){
+                                                    $object[$posArrO1].=$word[$posO2];
+                                                }
+                                                else{
+                                                    $object[$posArrO1].=$word[$posO2]." + CL(O)";
+                                                }
+                                            }
+                                        }
+                                        else {
+                                                $object[$posArrO1]=$word[$posO1]." + CL(O) + ".$word[$posCON]." + ".$word[$posO2]." + CL(O)";
+                                        }
 
 
-                                        $object[$posArrO1]=$word[$posO1]." + CL(O) + ".$word[$posCON]." + ".$word[$posO2]." + CL(O)";
 
 
                                         unset($object[$posArrO2]);
@@ -266,13 +303,34 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         }
    }
 
-  function checkNUM($SentenceRole,$word){
-    global $object;global $number;global $clssifier;
-    for($i=0;$i<$GLOBALS['countCON'];$i++){
+  function checkNUM($SentenceRole,$input){
+    global $object;global $number;global $clssifier;global $word;
       if ( (strpos($SentenceRole,"ODL")) !== false ){
-          $posCON = strpos($SentenceRole,"ODL",1)+1;
+
+
+          $posO = strpos($SentenceRole,"ODL",1);
+          $posD = strpos($SentenceRole,"ODL",1)+1;
+          $posL = strpos($SentenceRole,"ODL",1)+2;
+          $tempO = preg_quote($input[$posO], '~');
+
+
+          $posArrO = key(preg_grep('~' . $tempO . '~', $object));
+
+          $object[$posArrO]=$input[$posO]." + ". $input[$posD] ." + ".$input[$posL];
+          $word[$posO]=$input[$posO]." + ". $input[$posD] ." + ".$input[$posL];
+
+          unset($word[$posD]);
+          unset($word[$posL]);
+          $word=array_values($word);
+
+          //$SentenceRole = str_replace("ODL","O",$SentenceRole);
+          $SentenceRole = preg_replace('/ODL/',"O",$SentenceRole,1);
+
+          return $SentenceRole;
       }
-    }
+      else{
+        return $sentenceRole;
+      }
   }
 
 	function GetTSSentence($ALLSentenceRole,$word,$sentenNum){
@@ -309,7 +367,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       else{
         //return $word[1]." + ".$word[2];
         //return $ALLSentenceRole . "ไม่สามารถแปลประโยคได้ เนื่องจากไม่ต้องกับประโยคไม่ตรงกับข้อกำหนด";
-        return $GLOBALS['$ALLSentenceRole'] . " = " . print_r($word)  ;
+        return $GLOBALS['$ALLSentenceRole'] . " = " . print_r($word) ." + ". GetSentenceRole("O",0)  ;
       }
 	}
 
