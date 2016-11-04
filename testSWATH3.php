@@ -96,7 +96,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	function SetSentenceRole($input,$word,$wordBefore,$roleBefore){
     global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;global $clssifier;global $number;
 		if($input=="PPRS" || $input=="NCMN" ){
-      if($GLOBALS['countP']==1){
+      if($GLOBALS['countP']>$GLOBALS['countINO']){
         $inObject[$GLOBALS['countINO']]=$word." + CL(inO)";
         $GLOBALS['countINO']=$GLOBALS['countINO']+1;
         return "INO";
