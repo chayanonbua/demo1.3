@@ -162,7 +162,9 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           $verb[$GLOBALS['countV']-1] = $verb[$GLOBALS['countV']-1].".".$word;
       }
       else if($roleBefore=="O"){
-          $object[$GLOBALS['countO']-1] = $object[$GLOBALS['countO']-1].".".$word;
+
+          $object[$GLOBALS['countO']-1] = substr($object[$GLOBALS['countO']-1],0,strpos($object[$GLOBALS['countO']-1]," +"));
+          $object[$GLOBALS['countO']-1] = $object[$GLOBALS['countO']-1].".".$word." + CL(O)";
       }
     }
     elseif ($input=="RPRE") {
