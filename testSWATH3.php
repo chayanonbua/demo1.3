@@ -36,7 +36,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
             $GLOBALS['$ALLSentenceRole'] = $GLOBALS['$ALLSentenceRole'] . $sentenceRole[$count];
 						$count=$count+1;
 					}
-
+          $word=array_values($word);
           if($GLOBALS['countCL']>0){
                 for($i=1;$i<=$GLOBALS['countCL'];$i++){
 
@@ -169,7 +169,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       }
 
       unset($word[$count]);
-      $word=array_values($word);
+
 
 
     }
@@ -246,7 +246,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                       $posArrS2 = key(preg_grep('~' . $tempO2 . '~', $subject));
 
 
-                                      
+
                                       $subject[$posArrS1]=$subject[$posArrS1]." + ".$word[$posCON]." + ".$subject[$posArrS2];
 
                                       unset($subject[$posArrS2]);
