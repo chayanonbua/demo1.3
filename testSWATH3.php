@@ -97,7 +97,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	function SetSentenceRole($input,$token,$wordBefore,$roleBefore,$count){
     global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;global $clssifier;global $number;global $word;
 		if($input=="PPRS" || $input=="NCMN" ){
-      if($GLOBALS['countP']>$GLOBALS['countINO']){
+      if($GLOBALS['countP']>$GLOBALS['countINO'] || (($GLOBALS['countP']=$GLOBALS['countINO']) &&  ($roleBefore="C")) ){
         $inObject[$GLOBALS['countINO']]=$token." + CL(inO)";
         $GLOBALS['countINO']=$GLOBALS['countINO']+1;
         return "I";
@@ -177,7 +177,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           $pre[$GLOBALS['countP']] = $token;
           $object[$GLOBALS['countO']-1] = substr($object[$GLOBALS['countO']-1],0,strpos($object[$GLOBALS['countO']-1]," + "))." + " .$token ." +  CL(O)";
           $GLOBALS['countP']=$GLOBALS['countP']+1;
-          return "PRE";
+          return "P";
     }
     else if($input=="DCNM"){
       $number[$GLOBALS['countNUM']] = $token;
@@ -226,7 +226,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
   }
 
   function checkCON($SentenceRole,$word){
-    global $subject;global $object;global $clssifier;global $verb;
+    global $subject;global $object;global $clssifier;global $verb;global $inObject;
         if(strpos($SentenceRole,'C')){
             $subRoleSen = explode("C", $SentenceRole);
             //$posCON = strpos($SentenceRole,"C",1)+1; //
@@ -263,11 +263,11 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                       $posV1 = strpos($SentenceRole,"VCV",1);
                                       $posV2 = strpos($SentenceRole,"VCV",1)+2;
 
-                                      $tempO1 = preg_quote($word[$posV1], '~');
-                                      $tempO2 = preg_quote($word[$posV2], '~');
+                                      $tempV1 = preg_quote($word[$posV1], '~');
+                                      $tempV2 = preg_quote($word[$posV2], '~');
 
-                                      $posArrV1 = key(preg_grep('~' . $tempO1 . '~', $verb));
-                                      $posArrV2 = key(preg_grep('~' . $tempO2 . '~', $verb));
+                                      $posArrV1 = key(preg_grep('~' . $tempV1 . '~', $verb));
+                                      $posArrV2 = key(preg_grep('~' . $tempV2 . '~', $verb));
 
 
 
@@ -280,6 +280,29 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                       //$subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
                                       //$GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
                                       $SentenceRole = str_replace("VCV","V",$SentenceRole);
+                                    }
+                                    else if ( (strpos($SentenceRole,"ICI")) !== false ){
+                                      //$subject[$GLOBALS['countS']-2]=$word[$posCON-1].$word[$posCON].$word[$posCON+1];
+                                      $posCON = strpos($SentenceRole,"ICI",1)+1;
+                                      $posI1 = strpos($SentenceRole,"ICI",1);
+                                      $posI2 = strpos($SentenceRole,"ICI",1)+2;
+
+                                      $tempI1 = preg_quote($word[$posI1], '~');
+                                      $tempI2 = preg_quote($word[$posI2], '~');
+
+                                      $posArrI1 = key(preg_grep('~' . $tempI1 . '~', $inObject));
+                                      $posArrI2 = key(preg_grep('~' . $tempI2 . '~', $inObject));
+
+                                      //print_r($word);
+                                      $inObject[$posArrI1]=$inObject[$posArrI1]." + ".$word[$posCON]." + ".$inObject[$posArrI2];
+
+                                      unset($inObject[$posArrI2]);
+                                      $inObject=array_values($inObject);
+
+
+                                      //$subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
+                                      //$GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
+                                      $SentenceRole = str_replace("ICI","I",$SentenceRole);
                                     }
                                     else if ( ((strpos($SentenceRole,"OCO")) !== false)  ) {
 
@@ -376,10 +399,10 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
         return GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
-      else if($ALLSentenceRole=="SVPREI" || $ALLSentenceRole=="SVVPREI"){
+      else if($ALLSentenceRole=="SVPREI" || $ALLSentenceRole=="SVVPI"){
         return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
-      else if($ALLSentenceRole=="SNEGVPREI" || $ALLSentenceRole=="SNEGVVPREI"){
+      else if($ALLSentenceRole=="SNEGVPREI" || $ALLSentenceRole=="SNEGVVPI"){
         return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
       }
       else if ($ALLSentenceRole=="SNEGV"){
@@ -390,7 +413,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         return GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // O+CL+S+V
       }
-      else if ($ALLSentenceRole=="SVOPREI"){
+      else if ($ALLSentenceRole=="SVOPI"){
         return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // inO + CL(inO) + O + PRE + CL(O) + S + V
       }
@@ -398,7 +421,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         return GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
          // O+CL+S+V+NEG
       }
-      else if ($ALLSentenceRole=="SNEGVOPREI"){
+      else if ($ALLSentenceRole=="SNEGVOPI"){
         return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
         // inO + CL(inO) + O + PRE + CL(O) + S + V + NEG
       }
