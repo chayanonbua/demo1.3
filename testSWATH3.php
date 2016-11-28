@@ -226,7 +226,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
   }
 
   function checkCON($SentenceRole,$word){
-    global $subject;global $object;global $clssifier;
+    global $subject;global $object;global $clssifier;global $verb;
         if(strpos($SentenceRole,'C')){
             $subRoleSen = explode("C", $SentenceRole);
             //$posCON = strpos($SentenceRole,"C",1)+1; //
@@ -256,6 +256,30 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                       //$subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
                                       //$GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
                                       $SentenceRole = str_replace("SCS","S",$SentenceRole);
+                                    }
+                                    else if ( (strpos($SentenceRole,"VCV")) !== false ){
+                                      //$subject[$GLOBALS['countS']-2]=$word[$posCON-1].$word[$posCON].$word[$posCON+1];
+                                      $posCON = strpos($SentenceRole,"VCV",1)+1;
+                                      $posV1 = strpos($SentenceRole,"VCV",1);
+                                      $posV2 = strpos($SentenceRole,"VCV",1)+2;
+
+                                      $tempO1 = preg_quote($word[$posV1], '~');
+                                      $tempO2 = preg_quote($word[$posV2], '~');
+
+                                      $posArrV1 = key(preg_grep('~' . $tempO1 . '~', $verb));
+                                      $posArrV2 = key(preg_grep('~' . $tempO2 . '~', $verb));
+
+
+
+                                      $verb[$posArrV1]=$verb[$posArrV1]." + ".$word[$posCON]." + ".$verb[$posArrV2];
+
+                                      unset($verb[$posArrS2]);
+                                      $verb=array_values($verb);
+
+
+                                      //$subject[$GLOBALS['countS']-2]=$subject[$GLOBALS['countS']-2]." + ".$word[$posCON]." + ".$subject[$GLOBALS['countS']-1];
+                                      //$GLOBALS['$ALLSentenceRole'] = str_replace("SCONS","S",$SentenceRole);
+                                      $SentenceRole = str_replace("VCV","V",$SentenceRole);
                                     }
                                     else if ( ((strpos($SentenceRole,"OCO")) !== false)  ) {
 
