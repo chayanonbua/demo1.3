@@ -100,7 +100,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       if($GLOBALS['countP']>$GLOBALS['countINO']){
         $inObject[$GLOBALS['countINO']]=$token." + CL(inO)";
         $GLOBALS['countINO']=$GLOBALS['countINO']+1;
-        return "INO";
+        return "I";
 			}
       else if($GLOBALS['countS']>0 && $GLOBALS['countV']>0 ){
         $object[$GLOBALS['countO']]=$token." + CL(O)";
@@ -214,7 +214,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       else if ($word=="PRE"){
         return  $pre[$count];
       }
-      else if ($word=="INO"){
+      else if ($word=="I"){
         return  $inObject[$count];
       }
       else if ($word=="D"){
@@ -376,11 +376,11 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
         return GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
-      else if($ALLSentenceRole=="SVPREINO" || $ALLSentenceRole=="SVVPREINO"){
-        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
+      else if($ALLSentenceRole=="SVPREI" || $ALLSentenceRole=="SVVPREI"){
+        return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
-      else if($ALLSentenceRole=="SNEGVPREINO" || $ALLSentenceRole=="SNEGVVPREINO"){
-        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
+      else if($ALLSentenceRole=="SNEGVPREI" || $ALLSentenceRole=="SNEGVVPREI"){
+        return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
       }
       else if ($ALLSentenceRole=="SNEGV"){
         return GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
@@ -390,16 +390,16 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
         return GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // O+CL+S+V
       }
-      else if ($ALLSentenceRole=="SVOPREINO"){
-        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
+      else if ($ALLSentenceRole=="SVOPREI"){
+        return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
         // inO + CL(inO) + O + PRE + CL(O) + S + V
       }
       else if ($ALLSentenceRole=="SNEGVO"){
         return GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
          // O+CL+S+V+NEG
       }
-      else if ($ALLSentenceRole=="SNEGVOPREINO"){
-        return GetSentenceRole("INO",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
+      else if ($ALLSentenceRole=="SNEGVOPREI"){
+        return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("O",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum)." + ".GetSentenceRole("NEG",$sentenNum);
         // inO + CL(inO) + O + PRE + CL(O) + S + V + NEG
       }
       else{
