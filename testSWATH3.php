@@ -40,7 +40,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           $word=array_values($word);
           if($GLOBALS['countCL']>0){
                 for($i=1;$i<=$GLOBALS['countCL'];$i++){
-                    echo $GLOBALS['$ALLSentenceRole'];
+
                     $GLOBALS['$ALLSentenceRole'] = checkNUM($GLOBALS['$ALLSentenceRole'],$word);
 
                 }
@@ -163,7 +163,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       //return $roleBefore;
       if($roleBefore=="S"){
           $subject[$GLOBALS['countS']-1] = $subject[$GLOBALS['countS']-1].".".$token;
-          echo $token;
+          
       }else if($roleBefore=="V"){
           $verb[$GLOBALS['countV']-1] = $verb[$GLOBALS['countV']-1].".".$token;
       }
@@ -177,7 +177,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           SetSentenceRole("ADVN",$wordBefore.$token,$word[$count-2],$sentenceRole[$count-2],$count-2);
           $GLOBALS['$ALLSentenceRole']=str_replace($sentenceRole[$count-2].'L',$sentenceRole[$count-2],$GLOBALS['$ALLSentenceRole']);
           $GLOBALS['countCL'] = $GLOBALS['countCL']-1;
-          
+
 
 
       }
