@@ -20,7 +20,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 		//echo array_search('V',$sentenceRole);
 		function start($input){
 
-          global $word;
+          global $word; global $sentenceRole;
           $object;
 					$ans=swath($input);
 					$count = 0;
@@ -36,10 +36,11 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
             $GLOBALS['$ALLSentenceRole'] = $GLOBALS['$ALLSentenceRole'] . $sentenceRole[$count];
 						$count=$count+1;
 					}
+
           $word=array_values($word);
           if($GLOBALS['countCL']>0){
                 for($i=1;$i<=$GLOBALS['countCL'];$i++){
-
+                    echo $GLOBALS['$ALLSentenceRole'];
                     $GLOBALS['$ALLSentenceRole'] = checkNUM($GLOBALS['$ALLSentenceRole'],$word);
 
                 }
@@ -65,7 +66,10 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                return $TSSentence;
           }
           else{
+
               return GetTSSentence($GLOBALS['$ALLSentenceRole'],$word,$GLOBALS['countSen']);
+              //return $GLOBALS['$ALLSentenceRole'];
+
           }
 
 
@@ -95,7 +99,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 	}
 
 	function SetSentenceRole($input,$token,$wordBefore,$roleBefore,$count){
-    global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;global $clssifier;global $number;global $word;
+    global $subject;global $verb;global $object;global $conjunction;global $NEG;global $pre;global $inObject;global $clssifier;global $number;global $word;global $sentenceRole;
 		if($input=="PPRS" || $input=="NCMN" ){
       if($GLOBALS['countP']>$GLOBALS['countINO'] || (($GLOBALS['countP']=$GLOBALS['countINO']) &&  ($roleBefore="C")) ){
         $inObject[$GLOBALS['countINO']]=$token." + CL(inO)";
@@ -121,7 +125,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
 
 		}
-		else if($input=="VACT" || $input=="VSTA" /*|| $input=="VATT"*/){
+		else if($input=="VACT" || $input=="VSTA" ){
       $verb[$GLOBALS['countV']] = $token;
       $GLOBALS['countV']=$GLOBALS['countV']+1;
 
@@ -159,6 +163,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       //return $roleBefore;
       if($roleBefore=="S"){
           $subject[$GLOBALS['countS']-1] = $subject[$GLOBALS['countS']-1].".".$token;
+          echo $token;
       }else if($roleBefore=="V"){
           $verb[$GLOBALS['countV']-1] = $verb[$GLOBALS['countV']-1].".".$token;
       }
@@ -166,6 +171,15 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
           $object[$GLOBALS['countO']-1] = substr($object[$GLOBALS['countO']-1],0,strpos($object[$GLOBALS['countO']-1]," +"));
           $object[$GLOBALS['countO']-1] = $object[$GLOBALS['countO']-1].".".$token." + CL(O)";
+      }
+
+      elseif ($roleBefore=="L") {
+          SetSentenceRole("ADVN",$wordBefore.$token,$word[$count-2],$sentenceRole[$count-2],$count-2);
+          $GLOBALS['$ALLSentenceRole']=str_replace($sentenceRole[$count-2].'L',$sentenceRole[$count-2],$GLOBALS['$ALLSentenceRole']);
+          $GLOBALS['countCL'] = $GLOBALS['countCL']-1;
+          
+
+
       }
 
       unset($word[$count]);
