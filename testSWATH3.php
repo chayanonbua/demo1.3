@@ -163,7 +163,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       //return $roleBefore;
       if($roleBefore=="S"){
           $subject[$GLOBALS['countS']-1] = $subject[$GLOBALS['countS']-1].".".$token;
-          
+
       }else if($roleBefore=="V"){
           $verb[$GLOBALS['countV']-1] = $verb[$GLOBALS['countV']-1].".".$token;
       }
@@ -172,13 +172,14 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           $object[$GLOBALS['countO']-1] = substr($object[$GLOBALS['countO']-1],0,strpos($object[$GLOBALS['countO']-1]," +"));
           $object[$GLOBALS['countO']-1] = $object[$GLOBALS['countO']-1].".".$token." + CL(O)";
       }
-
+      else if($roleBefore=="I"){
+          $inObject[$GLOBALS['countINO']-1] = substr($inObject[$GLOBALS['countINO']-1],0,strpos($inObject[$GLOBALS['countINO']-1]," +"));
+          $inObject[$GLOBALS['countINO']-1] = $inObject[$GLOBALS['countINO']-1].".".$token." + CL(inO)";
+      }
       elseif ($roleBefore=="L") {
           SetSentenceRole("ADVN",$wordBefore.$token,$word[$count-2],$sentenceRole[$count-2],$count-2);
           $GLOBALS['$ALLSentenceRole']=str_replace($sentenceRole[$count-2].'L',$sentenceRole[$count-2],$GLOBALS['$ALLSentenceRole']);
           $GLOBALS['countCL'] = $GLOBALS['countCL']-1;
-
-
 
       }
 
@@ -413,7 +414,7 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
       if($ALLSentenceRole=="SV" || $ALLSentenceRole=="SVV"){
         return GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
-      else if($ALLSentenceRole=="SVPREI" || $ALLSentenceRole=="SVVPI"){
+      else if($ALLSentenceRole=="SVPI" || $ALLSentenceRole=="SVVPI"){
         return GetSentenceRole("I",$sentenNum)." + ".GetSentenceRole("S",$sentenNum)." + ".GetSentenceRole("V",$sentenNum);
       }
       else if($ALLSentenceRole=="SNEGVPREI" || $ALLSentenceRole=="SNEGVVPI"){
