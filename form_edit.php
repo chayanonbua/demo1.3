@@ -10,10 +10,10 @@
 <?
 		$txtbox = $_GET['txtbox'];
 		$link = mysql_connect("localhost","root","root1234");
-		$objDB = mysql_select_db("thaisignlanguage2");
+		$objDB = mysql_select_db("thaisignlanguage");
 	//	mysql_query("SET NAMES TIS620");
 		// ����觷�������ӹ����������Ѻ��ä����
-		$strSQL = "SELECT  * from vocabulary where words = '".$txtbox."'";
+		$strSQL = "SELECT  * from vocabulary1 where words = '".$txtbox."'";
 		$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
 		// �Ѻ�ӹǹ��������
 		$result=mysql_query("SELECT  count(*) as total from vocabulary where words = '".$txtbox."'");
@@ -32,7 +32,12 @@
 	  <tr>
 		<th width="91"> <div align="center">ID </div></th>
 		<th width="198"> <div align="center">คำ </div></th>
-		<th width="198"> <div align="center">คำเหมือน </div></th>
+		<th width="198"> <div align="center">ประเภท </div>
+		<th width="198"> <div align="center">ชนิด </div>
+		<th width="198"> <div align="center">คำเหมือน </div>
+		<th width="198"> <div align="center">classifier_id </div>
+
+		</th>
 	  </tr>
 	<?php
 	while($objResult = mysql_fetch_array($objQuery))
@@ -42,7 +47,10 @@
     	  <tr>
 		<td><div align="center"><?php echo $objResult["id"];?></div></td>
 		<td><div align="center"><?php echo $objResult["words"];?></div></td>
+		<td><div align="center"><?php echo $objResult["category"];?></div></td>
+		<td><div align="center"><?php echo $objResult["type"];?></div></td>
 		<td><?php echo $objResult["synonyms"];?></td>
+		<td><?php echo $objResult["classifier_id"];?></td>
 	  </tr>
 	<?php
 	$id =  $objResult["id"];
