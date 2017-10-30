@@ -9,6 +9,8 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 <body>
 
      <?php
+     $link = mysql_connect("localhost","root","root1234");
+     $objDB = mysql_select_db("thaisignlanguage");
 	 	$word;	$role; $sentenceRole;$ALLSentence;$ALLSentenceRole=""; $subject;$verb; $object;$inObject; $conjunction; $adjective;$NEG;$pre;$clssifier;$number;
 
 		$countSen=0;$countS = 0;$countV = 0;$countCON=0;$countO=0;$countNEG=0;$countP=0;$countINO=0;$countCL=0;$countNUM=0;
@@ -45,6 +47,9 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
 
                 }
           }
+
+
+          checkCL2($GLOBALS['$ALLSentenceRole'],$word);
 
           if($GLOBALS['countCON']>0){
 
@@ -341,18 +346,18 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
                                                     $object[$posArrO1]=$word[$posO1]." + ".$word[$posCON]." + ";
                                                 }
                                                 else{
-                                                    $object[$posArrO1]=$word[$posO1]." + CL(O) + ".$word[$posCON]." + ";
+                                                    $object[$posArrO1]=$object[$posArrO1]." + ".$word[$posCON]." + ";
                                                 }
                                                 if( ((strpos($object[$posArrO2],$clssifier[$i])) !== false) ){
                                                     $object[$posArrO1].=$word[$posO2];
                                                 }
                                                 else{
-                                                    $object[$posArrO1].=$word[$posO2]." + CL(O)";
+                                                    $object[$posArrO1].=$object[$posArrO2];
                                                 }
                                             }
                                         }
                                         else {
-                                                $object[$posArrO1]=$word[$posO1]." + CL(O) + ".$word[$posCON]." + ".$word[$posO2]." + CL(O)";
+                                                $object[$posArrO1]=$object[$posArrO1]." +  ".$word[$posCON]." + ".$object[$posArrO2];
                                         }
 
 
@@ -378,6 +383,95 @@ define('SWATH', 'C:\\AppServ\\www\\Thesis\\demo1.3');
           return $SentenceRole;
         }
    }
+
+   function checkCL($SentenceRole,$input){
+     global $object;global $number;global $clssifier;global $word;
+       if ( (strpos($SentenceRole,"O")) !== false ){
+
+
+           $posO = strpos($SentenceRole,"O",1);
+           $posL = strpos($SentenceRole,"O",1)+1;
+           $tempO = preg_quote($input[$posO], '~');
+
+
+           $posArrO = key(preg_grep('~' . $tempO . '~', $object));
+             $strSQL = "SELECT vocabulary1.id, vocabulary1.words, classifier.classifier
+             FROM vocabulary1
+             INNER JOIN classifier
+             ON vocabulary1.classifier_id=classifier.classifier_id
+             WHERE vocabulary1.words  = '".$input[$posO]."'";
+             //$strSQL2 = "SELECT * from classifier  WHERE classifier.classifier_id  = '".$str."'";
+
+             $objQuery = mysql_query( $strSQL) or die ("Error Query [". $strSQL."]");
+
+             while($objResult = mysql_fetch_array($objQuery)){
+                    //$test = $objResult["vocabulary1.words"];
+                    //$test =$objResult["classifier"];
+                    $classifier = $objResult["classifier"];
+             }
+             $object[$posArrO]=$input[$posO]." + ".  $classifier;
+
+
+
+           //$object[$posArrO]=$input[$posO]. " + ".$input[$posL];
+
+
+
+           //$word[$posO]=$input[$posO]." + 00".$test;
+
+           //unset($word[$posD]);
+           //$word=array_values($word);
+
+           //$SentenceRole = str_replace("ODL","O",$SentenceRole);
+           //$SentenceRole = preg_replace('/ODL/',"O",$SentenceRole,1);
+
+           return "$SentenceRole";
+
+       }
+       else{
+         return $sentenceRole;
+       }
+   }
+   function checkCL2($SentenceRole,$input){
+     global $object;global $number;global $clssifier;global $word;
+
+     $oldO;$test = "TEST";
+
+
+       if ( (strpos($SentenceRole,"O")) !== false ){
+
+       for($i=0;$i<count($object);$i++){
+          if ( (strpos($object[$i],"CL")) !== false ){
+
+            $posO = strpos($SentenceRole,"O",1);
+            $posL = strpos($SentenceRole,"O",1)+1;
+            $tempO = preg_quote($input[$posO], '~');
+
+            $posArrO = key(preg_grep('~' . $tempO . '~', $object));
+
+                $oldO =  explode("+", $object[$i]);
+
+                $strSQL = "SELECT vocabulary1.id, vocabulary1.words, classifier.classifier
+                FROM vocabulary1
+                INNER JOIN classifier
+                ON vocabulary1.classifier_id=classifier.classifier_id
+                WHERE vocabulary1.words  = '".$oldO[0]."'";
+
+                $objQuery = mysql_query($strSQL) or die ("Error Query [". $strSQL."]");
+
+                while($objResult = mysql_fetch_array($objQuery)){
+                       //$test = $objResult["vocabulary1.words"];
+                       //$test =$objResult["classifier"];
+                       $classifier = $objResult["classifier"];
+                }
+
+                $object[$i]=$oldO[0]." + ".  $classifier;
+
+          }
+       }
+      }
+      //$object[$posArrO]=$input[$posO]." + ".  $object[0];
+    }
 
   function checkNUM($SentenceRole,$input){
     global $object;global $number;global $clssifier;global $word;

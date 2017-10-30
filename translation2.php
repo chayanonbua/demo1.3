@@ -90,15 +90,15 @@ and open the template in the editor.
 								{
 									$senNOP[$i] = preg_replace('/\s+/', '', $senNOP[$i]);
 
-                  $strSQL = "SELECT  * from vocabulary where words = '".$senNOP[$i]."'";
+                  $strSQL = "SELECT  * from vocabulary1 where words = '".$senNOP[$i]."'";
               		$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
               		// �Ѻ�ӹǹ��������
-              		$result=mysql_query("SELECT  count(*) as total from vocabulary where words = '".$senNOP[$i]."'");
+              		$result=mysql_query("SELECT  count(*) as total from vocabulary1 where words = '".$senNOP[$i]."'");
               		$data=mysql_fetch_assoc($result);
 
               		if($data['total']==0) //ถ้าหาใน word ไม่เจอให้ไปหาใน synonyms
               		{
-              			$strSQL = "SELECT * from vocabulary where synonyms LIKE '%".$senNOP[$i]."%'";
+              			$strSQL = "SELECT * from vocabulary1 where synonyms LIKE '%".$senNOP[$i]."%'";
               			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
               		}
 
